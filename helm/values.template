@@ -1,23 +1,25 @@
-# Información básica del recurso
+  # Información básica del recurso
 name: ${GITHUB_REPOSITORY_NAME}
 namespace: sis-${GITHUB_REF_NAME}-ms
 
-# Etiquetas (Labels)
+  # Etiquetas (Labels)
 metadata:
   namespace: sis-${GITHUB_REF_NAME}-ms
   environment: ${GITHUB_REF_NAME}
   owner: ${GITHUB_ACTOR}
   commit: ${GITHUB_SHA}
 
-# Configuración de red
+  # Servicio
 service:
   name: ${GITHUB_REPOSITORY_NAME}
   port: 8080
 
+  # Red
 ingress:
   entry: "web"
   host: "${GITHUB_REPOSITORY_NAME}.sis-${GITHUB_REF_NAME}-ms.lab"
 
+  # Contenedor
 container:
-  image: ghcr.io/${GITHUB_ORG}/${GITHUB_REPOSITORY_NAME}:${GITHUB_SHA::7}
+  image: ghcr.io/${GITHUB_ORG}/${GITHUB_REPOSITORY_NAME}:${IMAGE_TAG}
   port: 8080
