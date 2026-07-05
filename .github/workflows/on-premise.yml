@@ -7,38 +7,38 @@ on:
   #workflow_dispatch:
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest #Runner cloud (default)
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0 
+  build:
+    runs-on: ubuntu-latest #Runner cloud (default)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
 
-  #     - name: Build in node
-  #       uses: codeparce/ci-workflows/.github/actions/node/build@v1
-  #       with:
-  #         type: web-build
-  #         target: dist
+      - name: Build in node
+        uses: codeparce/ci-workflows/.github/actions/node/build@v1
+        with:
+          type: web-build
+          target: dist
 
-  # docker-publish:
-  #   needs: build
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #   runs-on: ubuntu-latest  #Runner cloud (default)
-  #   steps:
-  #     - uses: actions/checkout@v4
+  docker-publish:
+    needs: build
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest  #Runner cloud (default)
+    steps:
+      - uses: actions/checkout@v4
           
-  #     - name: Download build artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: web-build
-  #         path: dist
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: dist
 
-  #     - name: Publish to Docker Hub
-  #       uses: codeparce/ci-workflows/.github/actions/registry@v1
-  #       with:
-  #         container-access-token: ${{ secrets.CONTAINER_REGISTRY_PAT_GITHUB }}
+      - name: Publish to Docker Hub
+        uses: codeparce/ci-workflows/.github/actions/registry@v1
+        with:
+          container-access-token: ${{ secrets.CONTAINER_REGISTRY_PAT_GITHUB }}
 
   deploy:
     runs-on: kubernetes #Runner on-premise
@@ -52,8 +52,9 @@ jobs:
       - name: Deploy to Kubernetes
         run: | 
           cd helm 
-          echo "Deploying ${GITHUB_REPOSITORY_NAME} to Kubernetes..."
           export IMAGE_TAG=${GITHUB_SHA::7}
+
+          echo "Deploying ${GITHUB_REPOSITORY_NAME} to Kubernetes..."
           envsubst < values.template > values.yaml
           helm upgrade --install ${GITHUB_REPOSITORY_NAME} . --namespace  sis-${GITHUB_REF_NAME}-ms --create-namespace
           
@@ -63,6 +64,8 @@ jobs:
             --docker-username=${{ github.actor }} \
             --docker-password=${{ secrets.CONTAINER_REGISTRY_PAT_GITHUB }} \
             --namespace=${NAME_SPACE} 
+
+          echo "Deployment completed successfully."
 
           echo "Domain: http://${GITHUB_REPOSITORY_NAME}.${GITHUB_REF_NAME}.${NAME_SPACE}.lab"
           echo "Domain: https://${GITHUB_REPOSITORY_NAME}.${GITHUB_REF_NAME}.${NAME_SPACE}.lab"
