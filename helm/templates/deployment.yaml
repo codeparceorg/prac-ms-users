@@ -29,10 +29,9 @@ spec:
         - name: {{ .Values.name }}
           image: {{ .Values.container.image }}
           imagePullPolicy: Always
-          volumeMounts:
-            - name: env-volume
-              mountPath: /app/.env   # <--- RUTA donde tu app espera el archivo
-              subPath: .env
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.name }}-env-file
           ports:
             - containerPort: {{ .Values.container.port }}
           resources:
@@ -42,7 +41,3 @@ spec:
             requests:
               cpu: "0.5"
               memory: "250Mi"
-      volumes:
-        - name: env-volume
-          configMap:
-            name: {{ .Values.name }}-config
