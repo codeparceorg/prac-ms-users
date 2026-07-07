@@ -51,14 +51,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout helm repository
-        uses: actions/checkout@v4
-        with:
-          repository: codeparceorg/helm-template
-          token: ${{ github.token }}
-          path: helm-template
-
       - name: Actions for on-premise deploy
-        uses: codeparce/ci-workflows/.github/actions/on-premise/ms@v1
+        uses: codeparce/ci-workflows/.github/actions/on-premise@v1
         with:
           container-access-token: ${{ secrets.CONTAINER_REGISTRY_PAT_GITHUB }}
+          type: ms
+
+      - name: Show deployment information
+        run: |
+          echo "Deployment completed successfully."
+          echo "DNS Externo: http://microservicio.${NS}.lab/users"
+          echo "DNS interno: ${SVC_NAME}.${NS}.svc.cluster.local/users"
