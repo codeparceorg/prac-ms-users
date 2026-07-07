@@ -11,7 +11,6 @@ CREATE TABLE public.users (
 	id uuid DEFAULT uuid_generate_v4() NOT NULL,
 	full_name varchar(100) NOT NULL,
 	email varchar(100) NOT NULL,
-	password_hash text NOT NULL,
 	phone varchar(20) NOT NULL,
 	address varchar(200) NOT NULL,
 	city varchar(100) NOT NULL,
