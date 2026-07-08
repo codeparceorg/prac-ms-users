@@ -13,7 +13,7 @@ export class CreateUserService {
   ) { }
 
   async execute(dto: CreateUserDto): Promise<User> {
-    const user = User.create(dto.full_name, dto.email, dto.phone || '', dto.address || '', dto.city , dto.avatar_url );
+    const user = User.create(dto.full_name, dto.email, dto.phone || '', dto.address || '', dto.city  , dto.auth_token_id);
     return this.userRepo.save(user);
   }
 }
