@@ -20,4 +20,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   city!: string;
 
+  @IsString()
+  avatar_url?: string | 'https://avatars.githubusercontent.com/u/91216501';
+
+  @IsString()
+  @IsNotEmpty()
+  auth_token_id!: string;
 }
